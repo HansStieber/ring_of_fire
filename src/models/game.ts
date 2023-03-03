@@ -1,12 +1,38 @@
 export class Game {
     public players: string[] = [];
     public stack: string[] = [];
-    public playedCard: string[] = [];
-    public CurrentPlayer: number = 0;
+    public playedCards: string[] = [];
+    public currentPlayer: number = 0;
 
     constructor() {
-        //for (let 1 = 0; i < 14; i++) {
-            //this.stack.push()         
-        //}
+        for (let i = 1; i < 14; i++) {
+            this.stack.push(i + '_of_clubs')
+            this.stack.push(i + '_of_diamonds')
+            this.stack.push(i + '_of_hearts')
+            this.stack.push(i + '_of_spades')
+        }
+        shuffle(this.stack);
     }
+}
+
+
+/**
+ * This function shuffles the values of a given array.
+ * 
+ * @param array - The array that is being shuffled.
+ * @returns - The shuffled array.
+ */
+function shuffle(array: any) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle.
+    while (0 !== currentIndex) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
 }

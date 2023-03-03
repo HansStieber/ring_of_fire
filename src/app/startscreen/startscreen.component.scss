@@ -39,8 +39,16 @@ h1 {
         opacity: 0;
     }
 
+    2% {
+        opacity: 0;
+    }
+
     50% {
         opacity: 1;
+    }
+
+    98% {
+        opacity: 0;
     }
 
     100% {

@@ -11,6 +11,10 @@ export class StartscreenComponent {
 
   showStartButton = true;
 
+
+  /**
+   * The function Runs the animateStartButton function on initialization of the page.
+   */
   ngOnInit() {
     this.animateStartButton();
   }
