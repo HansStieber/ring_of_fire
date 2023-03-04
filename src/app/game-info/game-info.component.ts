@@ -15,9 +15,9 @@ export class GameInfoComponent implements OnInit, OnChanges {
     { title: 'Women', description: 'All women drink!' },
     { title: 'Heaven', description: 'Put your hands up. The last player drinks.' },
     { title: 'Mate', description: 'Pick a mate. Your mate must always drink when you drink and the other way around.' },
-    { title: 'Thumbmaster', description: '' },
+    { title: 'Thumbmaster', description: 'You must pour a little of your drink into the cup that is in the middle of the table. Whomever picks up the LAST king must drink the whole cup, which could be filled with different drinks, so who knows how bad it could taste!' },
     { title: 'Men', description: 'All men drink!' },
-    { title: 'Quizmaster', description: '' },
+    { title: 'Quizmaster', description: 'Go around in a circle and you have to keep asking questions to each other. Doesn’t matter what the question is, as long as its a question. Whoever messes up and does not say a question, drinks.' },
     { title: 'Never have I ever...', description: 'Say something you never did. Everyone who did it has to drink.' },
     { title: 'Rule', description: 'Make a rule. Everyone needs to drink when he breaks the rule.' }
   ]
@@ -31,6 +31,12 @@ export class GameInfoComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
+
+  /**
+   * This function plays when the card property changes. If there is a value, the function sets a variable cardNumber and puts the
+   * number of card (first part of the string) as the value. Then it sets the title and description variable to the corresponding
+   * title and description of the cardAction array.
+   */
   ngOnChanges(): void {
     if (this.card) {
       let cardNumber = +this.card.split('_')[0];

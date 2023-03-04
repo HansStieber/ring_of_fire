@@ -5,6 +5,9 @@ export class Game {
     public currentPlayer: number = 0;
 
     constructor() {
+        /**
+         * This loop pushes all cards into the stack array. After that the stack is shuffled.
+         */
         for (let i = 1; i < 14; i++) {
             this.stack.push(i + '_of_clubs')
             this.stack.push(i + '_of_diamonds')

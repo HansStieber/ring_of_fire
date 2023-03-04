@@ -1,4 +1,4 @@
 <mat-card>
-    <mat-card-title>{{ title }}</mat-card-title>
-    <mat-card-content>{{ description }}</mat-card-content>
+    <mat-card-title class="padding-left">{{ card ? title : 'Add players and pick a card' }}</mat-card-title>
+    <mat-card-content>{{ card ? description : 'Please click on the plus icon to add at least two players. Then click on the card stack to select the next card.' }}</mat-card-content>
 </mat-card>

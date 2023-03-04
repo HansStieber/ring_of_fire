@@ -30,7 +30,7 @@ export class StartscreenComponent {
       setTimeout(() => {
         this.showStartButton = true;
       }, 1);
-    }, 4000);
+    }, 2000);
   }
 
 
