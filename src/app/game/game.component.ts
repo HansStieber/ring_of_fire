@@ -2,6 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import {
+  CollectionReference,
+  DocumentData,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from '@firebase/firestore';
+import { Firestore, collectionData, docData } from '@angular/fire/firestore';
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+interface games {
+  test: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 
 @Component({
   selector: 'app-game',
@@ -15,15 +37,26 @@ export class GameComponent implements OnInit {
    * The variable game hast the type 'Game'.
    */
   game!: Game;
+  private coll: CollectionReference<DocumentData>;
+  games$!: Observable<any>;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(private readonly firestore: Firestore, public dialog: MatDialog) {
+    this.coll = collection(this.firestore, 'games');
+  }
 
+  getAll() {
+    this.games$ = collectionData(this.coll);     //definiert die todos variable als die collectionData
+    this.games$.subscribe((games) => {         //funktion wird jedesmal aufgerufen wenn die datenbank sich ändert
+      console.log('neues game ist', games);
+    });
+  }
 
   /**
    * The function Runs the newGame function on initialization of the page.
    */
   ngOnInit(): void {
     this.newGame();
+    this.getAll();
   }
 
 
@@ -32,7 +65,8 @@ export class GameComponent implements OnInit {
    */
   newGame() {
     this.game = new Game();
-    console.log(this.game);
+    const coll = collection(this.firestore, 'games');
+    addDoc(coll, this.game.toJSON());
   }
 
 

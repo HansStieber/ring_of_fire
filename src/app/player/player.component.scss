@@ -24,3 +24,12 @@
 .player-active {
     background-color: rgba(255, 255, 255, 0.4) !important;
 }
+
+@media (max-width: 992px) {
+    .player {
+        border-top-left-radius: unset;
+        border-bottom-left-radius: unset;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+}

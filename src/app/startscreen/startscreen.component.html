@@ -1,5 +1,6 @@
 <div class="startscreen">
-    <div class="stripe">
-        <h1 (click)="newGame()" *ngIf="showStartButton" class="fade-in-out">RING OF FIRE</h1>
-        <span *ngIf="showStartButton" class="fade-in-out">- click to start -</span>
+    <div (click)="newGame()" class="stripe">
+        <h1 *ngIf="showStartButton" class="fade-in-out">RING OF FIRE</h1>
+        <span *ngIf="showStartButton" class="fade-in-out">- click -</span>
     </div>
+</div>
