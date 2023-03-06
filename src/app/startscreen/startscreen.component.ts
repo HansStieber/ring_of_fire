@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Firestore } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { addDoc, collection } from '@firebase/firestore';
+import { Game } from 'src/models/game';
 
 @Component({
   selector: 'app-startscreen',
@@ -7,7 +10,7 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./startscreen.component.scss']
 })
 export class StartscreenComponent {
-  constructor(private router: Router) {}
+  constructor(private firestore: Firestore, private router: Router) {}
 
   showStartButton = true;
 
@@ -38,6 +41,11 @@ export class StartscreenComponent {
    * The function changes the route by URL and navigates to the game.component.html page
    */
   newGame() {
-    this.router.navigateByUrl('/game');
+    let game = new Game;
+    let coll = collection(this.firestore, 'games');
+    addDoc(coll, game.toJSON())
+    .then((gameInfo: any) => {
+      this.router.navigateByUrl('/game/' + gameInfo.id);
+    });
   }
 }

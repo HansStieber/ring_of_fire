@@ -2,28 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import {
-  CollectionReference,
-  DocumentData,
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  setDoc,
-  updateDoc,
-} from '@firebase/firestore';
-import { Firestore, collectionData, docData } from '@angular/fire/firestore';
-
-import { Injectable } from '@angular/core';
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { collectionData, Firestore, updateDoc } from '@angular/fire/firestore';
+import { collection } from '@firebase/firestore';
 import { Observable } from 'rxjs';
-
-interface games {
-  test: string;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+import { ActivatedRoute } from '@angular/router';
+import { initializeApp } from '@angular/fire/app';
 
 @Component({
   selector: 'app-game',
@@ -37,26 +21,50 @@ export class GameComponent implements OnInit {
    * The variable game hast the type 'Game'.
    */
   game!: Game;
-  private coll: CollectionReference<DocumentData>;
   games$!: Observable<any>;
+  games!: Array<any>[];
+  id!: string;
+  coll: any;
 
-  constructor(private readonly firestore: Firestore, public dialog: MatDialog) {
-    this.coll = collection(this.firestore, 'games');
-  }
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private firestore: Firestore) { }
 
-  getAll() {
-    this.games$ = collectionData(this.coll);     //definiert die todos variable als die collectionData
-    this.games$.subscribe((games) => {         //funktion wird jedesmal aufgerufen wenn die datenbank sich ändert
-      console.log('neues game ist', games);
-    });
-  }
 
   /**
    * The function Runs the newGame function on initialization of the page.
    */
   ngOnInit(): void {
+    this.coll = collection(this.firestore, 'games');
+    this.games$ = collectionData(this.coll);
     this.newGame();
-    this.getAll();
+    this.route.params.subscribe((params) => {
+      this.id = params['id'];
+      this.games$.subscribe( () => {
+        this.getCorrectDocument();
+      })
+    })
+  }
+
+  async getCorrectDocument() {
+    let docRef = doc(this.firestore, "games" ,this.id);
+    let docSnap = await getDoc(docRef);
+    let data = await docSnap.data();
+    this.updateData(data);
+  }
+
+  updateData(data: any) {
+    this.game.players = data['players'];
+    //this.game.colors = data['colors'];
+    this.game.stack = data['stack'];
+    this.game.playedCards = data['playedCards'];
+    this.game.currentPlayer = data['currentPlayer'];
+    //this.game.pickCardAnimation = data['pickCardAnimation'];
+    //this.game.currentCard = data['currentCard'];
+    //this.game.gameOver = data['gameOver'];
+  }
+
+  saveGame() {
+    let docRef = doc(this.firestore, "games", this.id);
+    updateDoc(docRef, this.game.toJSON());
   }
 
 
@@ -65,8 +73,6 @@ export class GameComponent implements OnInit {
    */
   newGame() {
     this.game = new Game();
-    const coll = collection(this.firestore, 'games');
-    addDoc(coll, this.game.toJSON());
   }
 
 
@@ -117,11 +123,14 @@ export class GameComponent implements OnInit {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game.stack.pop()!;
       this.pickCardAnimation = true;
+      this.saveGame();
+
       setTimeout(() => {
         this.pickCardAnimation = false;
         this.game.playedCards.push(this.currentCard);
         this.game.currentPlayer++;
         this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+        this.saveGame();
       }, 1000);
     }
   }
@@ -136,6 +145,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.saveGame();
       }
     });
   }
