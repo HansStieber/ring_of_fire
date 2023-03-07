@@ -15,9 +15,7 @@ import { initializeApp } from '@angular/fire/app';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
-  currentCard: string = '';
-  /**
+/**
    * The variable game hast the type 'Game'.
    */
   game!: Game;
@@ -53,13 +51,11 @@ export class GameComponent implements OnInit {
 
   updateData(data: any) {
     this.game.players = data['players'];
-    //this.game.colors = data['colors'];
     this.game.stack = data['stack'];
     this.game.playedCards = data['playedCards'];
     this.game.currentPlayer = data['currentPlayer'];
-    //this.game.pickCardAnimation = data['pickCardAnimation'];
-    //this.game.currentCard = data['currentCard'];
-    //this.game.gameOver = data['gameOver'];
+    this.game.pickCardAnimation = data['pickCardAnimation'];
+    this.game.currentCard = data['currentCard'];
   }
 
   saveGame() {
@@ -120,14 +116,14 @@ export class GameComponent implements OnInit {
    * The next player is selceted. A modulo operator sets the currentPlayer to 0 again if players.length is reached.
    */
   pickCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop()!;
-      this.pickCardAnimation = true;
+    if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop()!;
+      this.game.pickCardAnimation = true;
       this.saveGame();
 
       setTimeout(() => {
-        this.pickCardAnimation = false;
-        this.game.playedCards.push(this.currentCard);
+        this.game.pickCardAnimation = false;
+        this.game.playedCards.push(this.game.currentCard);
         this.game.currentPlayer++;
         this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
         this.saveGame();
